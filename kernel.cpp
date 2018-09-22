@@ -1,5 +1,6 @@
 #include "types.h"
 #include "gdt.h"
+#include "interrupts.h"
 
 void printf(char* str)
 {
@@ -59,6 +60,11 @@ extern "C" void kernelMain(void* multibootStruct, uint32_t magicNum)
     printf("This is my OS");
 
     GlobalDescriptorTable gdt;
+    InterruptManager interrupts(&gdt);
+
+    // Here init hardware
+
+    interrupts.Activate();
 
     while (true);
 }

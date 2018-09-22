@@ -28,7 +28,7 @@ public:
     Port8BitSlow(uint16_t portNum);
     ~Port8BitSlow();
 
-    void Write(uint8_t data) override;
+    void Write(uint8_t data);
 };
 
 class Port16Bit : public Port

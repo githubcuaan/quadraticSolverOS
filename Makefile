@@ -2,15 +2,31 @@ GPPPARAMS = -m32 -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-excep
 ASPARAMS = --32
 LDPARAMS = -melf_i386
 
-objects = loader.o gdt.o port.o interrupts_asm.o interrupts.o kernel.o
+# Source directories
+BOOT_DIR = boot
+DRIVERS_DIR = drivers
+KERNEL_DIR = kernel
+KERNEL_CORE_DIR = kernel/core
+KERNEL_INTERRUPTS_DIR = kernel/interrupts
+KERNEL_MEMORY_DIR = kernel/memory
+
+# Include paths
+INCLUDES = -I$(KERNEL_DIR) -I$(DRIVERS_DIR) -I$(KERNEL_CORE_DIR) -I$(KERNEL_MEMORY_DIR) -I$(KERNEL_INTERRUPTS_DIR)
+
+objects = $(BOOT_DIR)/loader.o \
+          $(KERNEL_MEMORY_DIR)/gdt.o \
+          $(DRIVERS_DIR)/port.o \
+          $(KERNEL_INTERRUPTS_DIR)/interrupts_asm.o \
+          $(KERNEL_INTERRUPTS_DIR)/interrupts.o \
+          $(KERNEL_CORE_DIR)/kernel.o
 
 %.o: %.cpp
-	g++ $(GPPPARAMS) -o $@ -c $<
+	g++ $(GPPPARAMS) $(INCLUDES) -o $@ -c $<
 
 %.o: %.s
 	as $(ASPARAMS) -o $@ $<
 
-mykernel.bin: linker.ld $(objects)
+mykernel.bin: $(BOOT_DIR)/linker.ld $(objects)
 	ld $(LDPARAMS) -T $< -o $@ $(objects)
 
 mykernel.iso: mykernel.bin

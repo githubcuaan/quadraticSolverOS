@@ -1,6 +1,6 @@
 #include "types.h"
-#include "gdt.h"
-#include "interrupts.h"
+#include "../memory/gdt.h"
+#include "../interrupts/interrupts.h"
 
 void printf(char* str)
 {
